@@ -21,7 +21,7 @@
 #### 后端
 * Spring MVC + Spring + Mybatis搭配使用。
 * 使用maven进行依赖管理
-* JDK8,Tomcat 8.5,MySQL 5.7
+* JDK8,Tomcat 8.5,MySQL 5.7 数据库SQL在files文件夹里
 
 **如要运行，有两个地方需要自定义**
 > * 数据库连接的配置
@@ -33,5 +33,6 @@
 * 其他人就不用看了。。。
 
 ## 效果图
-![前台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/01.JPG)
-![后台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/02.JPG)
+![前台](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/01.JPG)
+![后台](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/02.JPG)
+![数据库](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/table.png)
