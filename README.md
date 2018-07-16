@@ -35,4 +35,4 @@
 ## 效果图
 ![前台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/files/01.JPG)
 ![后台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/files/02.JPG)
-![数据库](https://github.com/KonsonChow/ChargerSharingSystem/master/files/table.png)
+![数据库](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/files/table.png)
