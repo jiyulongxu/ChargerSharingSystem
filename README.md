@@ -33,6 +33,6 @@
 * 其他人就不用看了。。。
 
 ## 效果图
-![前台](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/01.JPG)
-![后台](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/02.JPG)
-![数据库](https://raw.githubusercontent.com/KonsonChow/ChargerSharingSystem/master/files/table.png)
+![前台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/files/01.JPG)
+![后台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/files/02.JPG)
+![数据库](https://github.com/KonsonChow/ChargerSharingSystem/master/files/table.png)
