@@ -22,6 +22,7 @@
 * Spring MVC + Spring + Mybatis搭配使用。
 * 使用maven进行依赖管理
 * JDK8,Tomcat 8.5,MySQL 5.7
+
 **如要运行，有两个地方需要自定义**
 > * 数据库连接的配置
 > * Yuntu.java 高德云图key，tableId
