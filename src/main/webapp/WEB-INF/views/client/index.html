@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+		<title></title>
+		<link rel="stylesheet" href="https://cache.amap.com/lbs/static/main.css" />
+		<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+		<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+		<link rel="stylesheet" href="/css/layer.css">
+		<style type="text/css">
+			.info {
+				border: solid 1px silver;
+			}
+			
+			div.info-top {
+				position: relative;
+				background: none repeat scroll 0 0 #F9F9F9;
+				border-bottom: 1px solid #CCC;
+				border-radius: 5px 5px 0 0;
+			}
+			
+			div.info-top div {
+				display: inline-block;
+				color: #333333;
+				font-size: 14px;
+				font-weight: bold;
+				line-height: 31px;
+				padding: 0 10px;
+			}
+			
+			div.info-top img {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				transition-duration: 0.25s;
+			}
+			
+			div.info-top img:hover {
+				box-shadow: 0px 0px 5px #000;
+			}
+			
+			div.info-middle {
+				font-size: 12px;
+				padding: 6px;
+				line-height: 20px;
+			}
+			
+			div.info-bottom {
+				height: 0px;
+				width: 100%;
+				clear: both;
+				text-align: center;
+			}
+			
+			div.info-bottom img {
+				position: relative;
+				z-index: 104;
+			}
+			
+			span {
+				margin-left: 5px;
+				font-size: 11px;
+			}
+			
+			.info-middle img {
+				float: left;
+				margin-right: 6px;
+			}
+		</style>
+		<title></title>
+	</head>
+
+	<body>
+		<div class="container" style="height: 100vh;width: 100%;">
+			<div class="weui-navbar">
+				<div class="weui-navbar__item">
+					<font style="font-family: tahoma;">
+						Power Bank
+					</font>
+				</div>
+			</div>
+			<div class="weui-tab" style="height:100vh;background-color: ghostwhite;">
+				<div class="weui-tab__bd">
+					<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+						<div style="height: 4vh;">顶栏占位</div>
+						<div id="mapContainer" style="width:100vw; height:95vh"></div>
+					</div>
+					<div id="tab2" class="weui-tab__bd-item weui-pull-to-refresh" style="width: 100vw;">
+						<div class="weui-pull-to-refresh__layer">
+							<div class='weui-pull-to-refresh__arrow'></div>
+							<div class='weui-pull-to-refresh__preloader'></div>
+							<div class="down">下拉刷新</div>
+							<div class="up">释放刷新</div>
+							<div class="refresh">正在刷新</div>
+						</div>
+						<div id="orderListDiv">
+							<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+								<div class="weui-panel" style="width: 98vw;">
+									<div class="weui-panel__hd">订单号:<span class="order_id">000012</span></div>
+									<div class="weui-panel__bd">
+										<div class="weui-media-box weui-media-box_text">
+											<ul style="list-style-type:none; ">
+												<li style="margin-bottom: 8px;">
+													<span class="weui-media-box__desc" style="color: dimgrey;"><strong>创建时间:&nbsp;&nbsp;&nbsp;</strong><span class="order_create_time" style="color: dimgrey;">2018-07-03 14:24:01</span></span>
+												</li>
+												<li style="margin-bottom: 10px;">
+													<span class="weui-media-box__desc" style="color:lightslategray"><strong>结束时间:&nbsp;&nbsp;&nbsp;</strong><span class="order_finish_time" style="color: lightslategray;">2018-07-03 14:24:01</span></span>
+
+												</li>
+												<li>
+													<span class="weui-media-box__desc">费用:&nbsp;<span class="order_cost">1.5</span>元</span>
+
+												</li>
+											</ul>
+											<ul class="weui-media-box__info">
+												<li class="weui-media-box__info__meta">订单状态:</li>
+												<li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><span class="order_has_finished">已完成</span></li>
+											</ul>
+
+										</div>
+									</div>
+								</div>
+							</a>
+
+						</div>
+					</div>
+					<div id="tab3" class="weui-tab__bd-item weui-pull-to-refresh" style="width: 100vw">
+						<div class="weui-pull-to-refresh__layer">
+							<div class='weui-pull-to-refresh__arrow'></div>
+							<div class='weui-pull-to-refresh__preloader'></div>
+							<div class="down">下拉刷新</div>
+							<div class="up">释放刷新</div>
+							<div class="refresh">正在刷新</div>
+						</div>
+						<div class="weui-panel weui-panel_access">
+							<div class="weui-panel__hd">用户信息</div>
+							<div class="weui-panel__bd">
+								<a href="javascript:void(0);" onclick="changeAlias()" class="weui-media-box weui-media-box_appmsg">
+									<div class="weui-media-box__hd">
+										<img class="weui-media-box__thumb" src="data:image/jpeg;base64,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" alt="">
+									</div>
+									<div class="weui-media-box__bd">
+										<h4 class="weui-media-box__title"><span id="user_alias">阿周</span></h4>
+										<p class="weui-media-box__desc"><span id="user_phone">15602209156</span></p>
+									</div>
+								</a>
+							</div>
+							<div class="weui-panel__ft">
+								<a href="javascript:void(0);" onclick="changeUserInfo()" class="weui-cell weui-cell_access weui-cell_link">
+									<div class="weui-cell__bd">更多</div>
+									<span class="weui-cell__ft"></span>
+								</a>
+							</div>
+
+						</div>
+						<div class="weui-panel">
+							<div class="weui-panel__hd">用户钱包</div>
+							<div class="weui-panel__bd">
+								<div class="weui-media-box weui-media-box_small-appmsg">
+									<div class="weui-cells">
+										<a class="weui-cell weui-cell_access" href="javascript:;" onclick="recharge()">
+											<div class="weui-cell__hd"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block"></div>
+											<div class="weui-cell__bd weui-cell_primary">
+												<p>可用余额:&nbsp;<span id="user_balance">60</span>元</p>
+											</div>
+											<span class="weui-cell__ft"></span>
+										</a>
+										<a class="weui-cell weui-cell_access" href="javascript:;">
+											<div class="weui-cell__hd"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block"></div>
+											<div class="weui-cell__bd weui-cell_primary">
+												<p>优惠券:&nbsp;0张</p>
+											</div>
+											<span class="weui-cell__ft"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab4" class="weui-tab__bd-item">
+						<div style="height: 4vh;">顶栏占位</div>
+						<div><span></span></div>
+					</div>
+					<div id="tab5" class="weui-tab__bd-item ">
+						<div style="height: 10vh;">顶栏占位</div>
+						<div class="weui-form-preview">
+							<div class="weui-form-preview__hd">
+								<label class="weui-form-preview__label">付款金额</label>
+								<em class="weui-form-preview__value" id="order_cost">¥2400</em>
+							</div>
+							<div class="weui-form-preview__bd">
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">订单号</label>
+									<big class="weui-form-preview__value" id="order_id">000001</big>
+								</div>
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">创建时间</label>
+									<big class="weui-form-preview__value" id="order_create_time">2018-07-04 23:00:00</big>
+								</div>
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">完成时间</label>
+									<big class="weui-form-preview__value" id="order_finish_time">2018-07-05 00:00:00</big>
+								</div>
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">租借地点</label>
+									<big class="weui-form-preview__value" id="order_lent_location_id">00001</big>
+								</div>
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">归还地点</label>
+									<big class="weui-form-preview__value" id="order_revert_location_id">000002</big>
+								</div>
+								<div class="weui-form-preview__item">
+									<label class="weui-form-preview__label">订单状态</label>
+									<big class="weui-form-preview__value" id="order_has_finished">已完成</big>
+								</div>
+							</div>
+							<div class="weui-form-preview__ft">
+								<a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:" onclick="showTab(tabNum,2)">返回</a>
+								<button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:" id="order_action">操作</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-tabbar">
+					<a href="javascript:void(0);" onclick="authorityCheck(1)" class="weui-tabbar__item ">
+						<div class="weui-tabbar__icon">
+							<img src="/img/icon_nav_msg.png" alt="">
+						</div>
+						<p class="weui-tabbar__label">充电宝</p>
+					</a>
+					<a href="javascript:void(0);" onclick="authorityCheck(2)" class="weui-tabbar__item">
+						<div class="weui-tabbar__icon">
+							<img src="/img/icon_nav_article.png" alt="">
+						</div>
+						<p class="weui-tabbar__label">订单</p>
+					</a>
+					<a href="javascript:void(0);" onclick="authorityCheck(3)" class="weui-tabbar__item">
+						<div class="weui-tabbar__icon">
+							<img src="/img/icon_nav_cell.png" alt="">
+						</div>
+						<p class="weui-tabbar__label">我的</p>
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.7&key=ae7ae3410956af391de4d20c795877ff"></script>
+		<script type="text/javascript">
+			var currentPosition = null;
+			var search = null;
+			var map = new AMap.Map('mapContainer', {
+				resizeEnable: true
+			})
+			map.plugin('AMap.Geolocation', function() {
+				var geolocation = new AMap.Geolocation({
+					// 是否使用高精度定位，默认：true
+					enableHighAccuracy: true,
+					// 设置定位超时时间，默认：无穷大
+					timeout: 1000,
+					// 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
+					buttonOffset: new AMap.Pixel(10, 20),
+					//  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+					zoomToAccuracy: true,
+					//  定位按钮的排放位置,  RB表示右下
+					buttonPosition: 'RB'
+				})
+				map.addControl(geolocation);
+				geolocation.getCurrentPosition()
+				AMap.event.addListener(geolocation, 'complete', onComplete)
+				AMap.event.addListener(geolocation, 'error', onError)
+
+				function onComplete(data) {
+					console.log("onComplete	data" + data);
+					currentPosition = data.position;
+					console.log("onComplete search" + search);
+					console.log("onComplete currentPosition" + currentPosition);
+					if(search == null) {
+						initSearch();
+						search.searchNearBy(currentPosition, 2000, function(status, result) {
+							console.log("search status:" + status + "  +  result + " + result);
+							for(var i = 0; i < result.count; i++) {
+								createMark(result.datas[i])
+							}
+						});
+					} else {
+						search.searchNearBy(currentPosition, 2000, function(status, result) {
+							console.log("search status:" + status + "  +  result + " + result);
+							for(var i = 0; i < result.count; i++) {
+								createMark(result.datas[i])
+							}
+						});
+					}
+				}
+
+				function onError(data) {
+					currentPosition = null;
+				}
+			})
+
+			function initSearch() {
+				AMap.plugin(["AMap.CloudDataSearch"], function() {
+					var searchOptions = {
+						pageSize: 10,
+					};
+
+					//实例化搜索
+					search = new AMap.CloudDataSearch("5b1646a0afdf522fe2317369", searchOptions);
+					console.log("init search " + search);
+				});
+			}
+
+			function createMark(result) {
+				// 创建一个 Marker 实例：
+				var marker = new AMap.Marker({
+					position: new AMap.LngLat(result._location.getLng(), result._location.getLat()), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+					title: '投放点'
+				});
+				AMap.event.addListener(marker, 'click', function(result) {
+					infoWindow.open(map, marker.getPosition());
+				});
+
+				//实例化信息窗体
+				var title = result._name,
+					content = [];
+				content.push("地址：" + result._address);
+				content.push("可用充电宝：" + result.available);
+				content.push("<a href='javascript:;' class='weui-btn weui-btn_mini weui-btn_primary' onclick='borrow(" + result._id + ")'>租用</a>");
+				var infoWindow = new AMap.InfoWindow({
+					isCustom: true, //使用自定义窗体
+					closeWhenClickMap: true,
+					content: createInfoWindow(title, content.join("<br/>"), result._id),
+					offset: new AMap.Pixel(16, -45)
+				});
+
+				// 将创建的点标记添加到已有的地图实例：
+				map.add(marker);
+			}
+
+			//构建自定义信息窗体
+			function createInfoWindow(title, content) {
+				var info = document.createElement("div");
+				info.className = "info";
+
+				//可以通过下面的方式修改自定义窗体的宽高
+				//info.style.width = "400px";
+				// 定义顶部标题
+				var top = document.createElement("div");
+				var titleD = document.createElement("div");
+				var closeX = document.createElement("img");
+				top.className = "info-top";
+				titleD.innerHTML = title;
+				closeX.src = "https://webapi.amap.com/images/close2.gif";
+				closeX.onclick = closeInfoWindow;
+
+				top.appendChild(titleD);
+				top.appendChild(closeX);
+				info.appendChild(top);
+
+				// 定义中部内容
+				var middle = document.createElement("div");
+				middle.className = "info-middle";
+				middle.style.backgroundColor = 'white';
+				middle.innerHTML = content;
+				info.appendChild(middle);
+
+				// 定义底部内容
+				var bottom = document.createElement("div");
+				bottom.className = "info-bottom";
+				bottom.style.position = 'relative';
+				bottom.style.top = '0px';
+				bottom.style.margin = '0 auto';
+				var sharp = document.createElement("img");
+				sharp.src = "https://webapi.amap.com/images/sharp.png";
+				bottom.appendChild(sharp);
+				info.appendChild(bottom);
+				return info;
+			}
+			//关闭信息窗体
+			function closeInfoWindow() {
+				map.clearInfoWindow();
+			}
+
+			function borrow(navLocationId) {
+				console.log("borrow navLocationId" + navLocationId);
+				console.log("borrow userId" + userId);
+				if(userId != null) {
+					$.confirm("是否确定租借充电宝?费用为0.6元/30分钟", function() {
+						$.ajax({
+							type: "POST",
+							url: "/api/client/orders",
+							data: {
+								_method: "PUT",
+								navLocationId: navLocationId
+							},
+							async: false,
+							xhrFields: {
+								withCredentials: true
+							},
+							success: function(result) {
+								console.log(result);
+								if(result.code == 1) {
+									$.toast(result.msg);
+								} else {
+									showTab(tabNum, 1);
+									$.toast(result.msg);
+								}
+							}
+						});
+					}, function() {
+						//点击取消后的回调函数
+					});
+				} else {
+					$.toast("请先登录。");
+				}
+			}
+		</script>
+
+		<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
+		<script src="/js/layer.js"></script>
+
+		<!-- 作者：33564200@qq.com 时间：2018-07-03 描述：訂單頁 下拉刷新 -->
+		<script language="javascript">
+			var userId = null;
+			var tabNum = 5;
+			//			订单页面下拉刷新初始化
+			//			$('#tab2').pullToRefresh({
+			//				onRefresh: function() {
+			//				});
+			//				$('#tab2').pullToRefreshDone();
+			//				},
+			//				onPull: function(percent) { /* 用户下拉过程中会触发，接收一个百分比表示用户下拉的比例 */ },
+			//				distance: 50 /* 下拉刷新的触发距离， 注意，如果你重新定义了这个值，那么你需要重载一部分CSS才可以，请参考下面的自定义样式部分 */
+			//			});
+
+			$('#tab3').pullToRefresh({
+				onRefresh: function() {
+					refreshInfo()
+				},
+				onPull: function(percent) { /* 用户下拉过程中会触发，接收一个百分比表示用户下拉的比例 */ },
+				distance: 50 /* 下拉刷新的触发距离， 注意，如果你重新定义了这个值，那么你需要重载一部分CSS才可以，请参考下面的自定义样式部分 */
+			});
+
+			function showTab(tabNum, target) {
+				for(var i = 1; i <= tabNum; i++) {
+					$("#tab" + i).removeClass("weui-tab__bd-item--active");
+				}
+				$("#tab" + target).addClass("weui-tab__bd-item--active");
+			};
+
+			//			未登录时拦截订单页以及个人页的请求
+			function authorityCheck(referer) {
+				if(referer == 1) {
+					showTab(tabNum, 1);
+				} else {
+					if(userId != null) {
+						showTab(tabNum, referer);
+						if(referer == 2) {
+							refreshOrderList();
+						}
+					} else {
+						showTab(tabNum, 4);
+						$.modal({
+							title: "尚未登录",
+							text: "请登陆后进行操作",
+							buttons: [{
+									text: "登录",
+									onClick: function() {
+										$.login({
+											title: '登录',
+											text: '请输入手机号码和密码',
+											username: '15602209156', // 默认用户名
+											password: '', // 默认密码
+											onOK: function(username, password) {
+												$.ajax({
+													type: "POST",
+													url: "/api/client/users/phone/" + username + "/actions/login",
+													data: {
+														userPassword: password
+													},
+													async: false,
+													xhrFields: {
+														withCredentials: true
+													},
+													success: function(result) {
+														console.log(result);
+														if(result.code == 1) {
+															cookie.set("userId",result.data[0].user_id,1)
+															userId = cookie.get("userId");
+															refreshInfo();
+															refreshOrderList();
+															showTab(tabNum, referer);
+															$.toast(result.msg);
+														} else {
+															showTab(tabNum, 1);
+															$.toast(result.msg);
+														}
+													}
+												});
+
+											},
+											onCancel: function() {
+												showTab(tabNum, 1);
+												console.log(userId);
+											}
+										});
+									}
+								},
+								{
+									text: "注册",
+									onClick: function() {
+										$.login({
+											title: '注册',
+											text: '请输入手机号码和密码',
+											username: '', // 默认用户名
+											password: '', // 默认密码
+											onOK: function(username, password) {
+												$.prompt({
+													title: '昵称',
+													text: '请输入用户昵称',
+													input: '',
+													empty: false, // 是否允许为空
+													onOK: function(input) {
+														$.ajax({
+															type: "POST",
+															url: "/api/client/users",
+															data: {
+																_method: "PUT",
+																userPhone: username,
+																userPassword: password,
+																userAlias: input
+															},
+															async: false,
+															xhrFields: {
+																withCredentials: true
+															},
+															success: function(result) {
+																console.log(result);
+																if(result.code == 1) {
+																	//userId = result.data[0].user_id;
+																	authorityCheck(referer);
+																	console.log(referer)
+																	$.toast(result.msg);
+																} else {
+																	showTab(tabNum, 1);
+																	$.toast(result.msg);
+																}
+															}
+														});
+													},
+													onCancel: function() {
+														//点击取消
+													}
+												});
+
+											},
+											onCancel: function() {
+												showTab(tabNum, 1);
+											}
+										});
+
+									}
+								},
+								{
+									text: "取消",
+									className: "default",
+									onClick: function() {
+										showTab(tabNum, 1);
+									}
+								},
+							]
+						});
+					}
+				}
+			}
+
+			function sendPost(tarurl, params) {
+				$.ajax({
+					url: tarurl,
+					type: 'POST', //GET
+					async: true, //或false,是否异步
+					data: params,
+					timeout: 5000, //超时时间
+					dataType: 'json', //返回的数据格式：json/xml/html/script/jsonp/text
+					success: function(data, textStatus, jqXHR) {
+						return data;
+					},
+					error: function(xhr, textStatus) {
+						console.log('错误')
+						console.log(xhr)
+						console.log(textStatus)
+						return {
+							code: -1
+						};
+					},
+				})
+			}
+
+			function refreshInfo() {
+				$.ajax({
+					type: "GET",
+					url: "/api/client/users/" + userId,
+					data: {
+
+					},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(result) {
+						console.log(result);
+						if(result.code == 1) {
+							$('#user_alias').text(result.data[0].user_alias);
+							$('#user_phone').text(result.data[0].user_phone);
+							$('#user_balance').text(result.data[0].user_balance);
+						} else {
+							$.toast(result.msg);
+						}
+						$('#tab3').pullToRefreshDone();
+					}
+				});
+
+			}
+
+			function changeAlias() {
+				$.prompt({
+					title: '昵称',
+					text: '输入新昵称',
+					input: $('#user_alias').text(),
+					empty: false, // 是否允许为空
+					onOK: function(input) {
+						$.ajax({
+							type: "POST",
+							url: "/api/client/users/" + userId + "/alias",
+							data: {
+								userAlias: input
+							},
+							async: false,
+							xhrFields: {
+								withCredentials: true
+							},
+							success: function(result) {
+								console.log(result);
+								if(result.code == 1) {
+									refreshInfo();
+									$.toast(result.msg);
+								} else {
+									showTab(tabNum, 1);
+									$.toast(result.msg);
+								}
+							}
+						});
+					},
+					onCancel: function() {
+						//点击取消
+					}
+				});
+			}
+
+			function recharge() {
+				$.prompt({
+					title: '充值',
+					text: '输入充值金额',
+					input: '30',
+					empty: false, // 是否允许为空
+					onOK: function(input) {
+						$.ajax({
+							type: "POST",
+							url: "/api/client/users/" + userId + "/balance",
+							data: {
+								money: input
+							},
+							async: false,
+							xhrFields: {
+								withCredentials: true
+							},
+							success: function(result) {
+								console.log(result);
+								if(result.code == 1) {
+									refreshInfo();
+									$.toast(result.msg);
+								} else {
+									showTab(tabNum, 1);
+									$.toast(result.msg);
+								}
+							}
+						});
+					},
+					onCancel: function() {
+						//点击取消
+					}
+				});
+			}
+
+			function changeUserInfo() {
+				$.actions({
+					actions: [{
+						text: "改绑手机",
+						onClick: function() {
+							$.prompt({
+								title: '改绑',
+								text: '输入新的手机号码',
+								input: $('#user_phone').text(),
+								empty: false, // 是否允许为空
+								onOK: function(input) {
+									$.ajax({
+										type: "POST",
+										url: "/api/client/users/" + userId + "/phone",
+										data: {
+											phone: input
+										},
+										async: false,
+										xhrFields: {
+											withCredentials: true
+										},
+										success: function(result) {
+											console.log(result);
+											if(result.code == 1) {
+												refreshInfo();
+												$.toast(result.msg);
+											} else {
+												showTab(tabNum, 1);
+												$.toast(result.msg);
+											}
+										}
+									});
+								},
+								onCancel: function() {
+									//点击取消
+								}
+							});
+
+						}
+					}, {
+						text: "修改密码",
+						onClick: function() {
+							var oldPasswordInput;
+							var newPasswordInput;
+							$.prompt({
+								title: '修改密码',
+								text: '输入原密码',
+								input: "",
+								empty: false, // 是否允许为空
+								onOK: function(input) {
+									oldPasswordInput = input;
+									$.prompt({
+										title: '修改密码',
+										text: '输入新密码',
+										input: "",
+										empty: false, // 是否允许为空
+										onOK: function(input) {
+											newPasswordInput = input
+											$.ajax({
+												type: "POST",
+												url: "/api/client/users/" + userId + "/password",
+												data: {
+													oldPassword: oldPasswordInput,
+													newPassword: newPasswordInput
+												},
+												async: false,
+												xhrFields: {
+													withCredentials: true
+												},
+												success: function(result) {
+													console.log(result);
+													if(result.code == 1) {
+														refreshInfo();
+														$.toast(result.msg);
+													} else {
+														showTab(tabNum, 1);
+														$.toast(result.msg);
+													}
+												}
+											});
+
+										},
+										onCancel: function() {
+											//点击取消
+										}
+									});
+								},
+								onCancel: function() {
+									//点击取消
+								}
+							});
+						}
+					}, {
+						text: "退出登录",
+						onClick: function() {
+							$.ajax({
+								type: "POST",
+								url: "/api/client/users/" + userId + "/actions/logout",
+								data: {
+
+								},
+								async: false,
+								xhrFields: {
+									withCredentials: true
+								},
+								success: function(result) {
+									console.log(result);
+									if(result.code == 1) {
+
+										$.toast(result.msg);
+										cookie.delete("userId")
+										userId = cookie.get("userId");
+										showTab(tabNum, 1);
+									} else {
+										showTab(tabNum, 1);
+										$.toast(result.msg);
+									}
+								}
+							});
+						}
+					}]
+				});
+			}
+
+			var orderlisttemplate = "<a href='javascript:void(0);' class='weui-media-box weui-media-box_appmsg'>" +
+				"							<div class='weui-panel' style='width: 98vw;'>" +
+				"								<div class='weui-panel__hd'>订单号:<span class='order_id'>000012</span></div>" +
+				"								<div class='weui-panel__bd'>" +
+				"									<div class='weui-media-box weui-media-box_text'>" +
+				"										<ul style='list-style-type:none; '>" +
+				"											<li style='margin-bottom: 8px;'>" +
+				"												<span class='weui-media-box__desc' style='color:dimgrey;'><strong>创建时间:&nbsp;&nbsp;&nbsp;</strong><span class='order_create_time' style='color: dimgrey;'>2018-07-03 14:24:01</span></span>" +
+				"											</li>" +
+				"											<li style='margin-bottom: 10px;'>" +
+				"												<span class='weui-media-box__desc' style='color:lightslategray'><strong>结束时间:&nbsp;&nbsp;&nbsp;</strong><span class='order_finish_time' style='color: lightslategray;'>2018-07-03 14:24:01</span></span>" +
+				"" +
+				"											</li>" +
+				"											<li>" +
+				"												<span class='weui-media-box__desc'>费用:&nbsp;<span class='order_cost'>1.5</span>元</span>" +
+				"" +
+				"											</li>" +
+				"										</ul>" +
+				"										<ul class='weui-media-box__info'>" +
+				"											<li class='weui-media-box__info__meta'>订单状态:</li>" +
+				"											<li class='weui-media-box__info__meta weui-media-box__info__meta_extra'><span class='order_has_finished'>已完成</span></li>" +
+				"										</ul>" +
+				"" +
+				"									</div>" +
+				"								</div>" +
+				"							</div>" +
+				"						</a>"
+
+			function refreshOrderList() {
+				$.ajax({
+					type: "GET",
+					url: "/api/client/orders",
+					data: {},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(result) {
+						if(result.code == 1) {
+							$('#orderListDiv').empty();
+							for(var i = 0; i < result.data.length; i++) {
+								var test = $.parseHTML(replacexxx(result.data[i]));
+								console.log(test);
+								$('#orderListDiv').append(test);
+
+							}
+						} else {
+
+						}
+
+					}
+				});
+				//				$('#tab2').pullToRefreshDone();
+			}
+
+			function replacexxx(orderElement) {
+				var order_finish_time = ""
+				var order_has_finished = "未完成"
+				var order_cost = "未結算"
+				if(typeof(orderElement.order_finish_time) == "undefined") {
+					order_finish_time = ""
+				} else {
+					order_finish_time = orderElement.order_finish_time
+				}
+				if(orderElement.order_has_finished == 1) {
+					order_has_finished = "已完成"
+				} else {
+					order_has_finished = "未完成"
+				}
+				if(typeof(orderElement.order_cost) == "undefined") {
+					order_cost = "未結算"
+				} else {
+					order_cost = orderElement.order_cost + "元"
+				}
+				return "<a href='javascript:;' class='weui-media-box weui-media-box_appmsg' onclick='openOrder(" + orderElement.order_id + ")'>" +
+					"							<div class='weui-panel' style='width: 98vw;'>" +
+					"								<div class='weui-panel__hd'>订单号:<span class='order_id'>" + orderElement.order_id + "</span></div>" +
+					"								<div class='weui-panel__bd'>" +
+					"									<div class='weui-media-box weui-media-box_text'>" +
+					"										<ul style='list-style-type:none; '>" +
+					"											<li style='margin-bottom: 8px;'>" +
+					"												<span class='weui-media-box__desc' style='color:dimgrey;'><strong>创建时间:&nbsp;&nbsp;&nbsp;</strong><span class='order_create_time' style='color: dimgrey;'>" + orderElement.order_create_time + "</span></span>" +
+					"											</li>" +
+					"											<li style='margin-bottom: 10px;'>" +
+					"												<span class='weui-media-box__desc' style='color:lightslategray'><strong>结束时间:&nbsp;&nbsp;&nbsp;</strong><span class='order_finish_time' style='color: lightslategray;'>" + order_finish_time + "</span></span>" +
+					"" +
+					"											</li>" +
+					"											<li>" +
+					"												<span class='weui-media-box__desc'>费用:&nbsp;<span class='order_cost'>" + order_cost + "</span></span>" +
+					"" +
+					"											</li>" +
+					"										</ul>" +
+					"										<ul class='weui-media-box__info'>" +
+					"											<li class='weui-media-box__info__meta'>订单状态:</li>" +
+					"											<li class='weui-media-box__info__meta weui-media-box__info__meta_extra'><span class='order_has_finished'>" + order_has_finished + "</span></li>" +
+					"										</ul>" +
+					"" +
+					"									</div>" +
+					"								</div>" +
+					"							</div>" +
+					"						</a>"
+			}
+
+			function openOrder(orderId) {
+				$.ajax({
+					type: "GET",
+					url: "/api/client/orders/" + orderId,
+					data: {},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(result) {
+						console.log("openOrder" + result)
+						if(result.code == 1) {
+							$('#order_id').text(result.data[0].order_id);
+							$('#order_create_time').text(result.data[0].order_create_time);
+							$('#order_lent_location_id').text(result.data[0].order_lent_location_id);
+							$('#order_revert_location_id').text(result.data[0].order_revert_location_id);
+
+							if(typeof(result.data[0].order_finish_time) == "undefined") {
+								$('#order_finish_time').text("未完成");
+							} else {
+								$('#order_finish_time').text(result.data[0].order_finish_time);
+							}
+
+							if(result.data[0].order_has_finished == 1) {
+								$('#order_has_finished').text("已完成")
+							} else {
+								$('#order_has_finished').text("未完成")
+							}
+
+							if(typeof(result.data[0].order_cost) == "undefined") {
+								$('#order_cost').text("未结算")
+								$('#order_action').attr("onclick", "finishOrder(" + result.data[0].order_id + ")")
+							} else {
+								$('#order_cost').text("¥" + result.data[0].order_cost)
+								$('#order_action').attr("onclick", "finishOrder(0)")
+							}
+
+							showTab(tabNum, 5);
+						} else {
+							showTab(tabNum, 2)
+							$.toast(result.msg);
+						}
+
+					}
+				});
+
+			}
+
+			function finishOrder(orderId) {
+				if(orderId > 0) {
+					$.confirm({
+						title: '完成訂單',
+						text: "预计消费: " + getCost() + " 元",
+						onOK: function() {
+							getLocationNearBy(orderId)
+						},
+						onCancel: function() {}
+					});
+				} else {
+					$.toast("订单已完成");
+				}
+			}
+
+			function submitFinishOrder(orderId, navlocationId) {
+				console.log("oid:" + orderId + " nav:" + navlocationId)
+				$.ajax({
+					type: "POST",
+					url: "/api/client/orders/" + orderId,
+					data: {
+						navLocationId: navlocationId
+					},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(result) {
+						console.log(result);
+						if(result.code == 1) {
+							$.toast(result.msg);
+							showTab(tabNum, 2);
+						} else {
+							$.toast(result.msg);
+						}
+					}
+				});
+			}
+
+			var nearbyresult = null;
+
+			function getLocationNearBy(orderId) {
+				var actions = []
+				var action = {}
+				search.searchNearBy(currentPosition, 2000, function(status, result) {
+					nearbyresult = result;
+					console.log("search status:" + status + "  +  result + " + result);
+					for(var i = 0; i < result.count && i < 3; i++) {
+						var action = {
+							text: result.datas[i]._name,
+							orderId: orderId,
+							navlocationId: result.datas[i]._id,
+							onClick: function() {
+								submitFinishOrder(this.orderId, this.navlocationId)
+							}
+						}
+						console.log(action)
+						actions.push(action)
+					}
+					$.actions({
+						actions: actions,
+						title: "请选择归还地点"
+					});
+				});
+
+			}
+
+			function getCost() {
+				//将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
+				startTime = $('#order_create_time').text().replace(/\-/g, "/");
+				//将计算间隔类性字符转换为小写
+				var sTime = new Date(startTime); //开始时间
+				var eTime = new Date(); //结束时间
+				//作为除数的数字
+				var timeType = 1000 * 60;
+				var minus = parseInt((eTime.getTime() - sTime.getTime()) / parseInt(timeType))
+				minus = parseInt(minus / 30) + 1
+				return minus * 0.6
+			}
+
+			var cookie = {
+				set: function(key, val, time) { //设置cookie方法
+					var date = new Date(); //获取当前时间
+					var expiresDays = time; //将date设置为n天以后的时间
+					date.setTime(date.getTime() + expiresDays * 24 * 3600 * 1000); //格式化为cookie识别的时间
+					document.cookie = key + "=" + val + ";expires=" + date.toGMTString(); //设置cookie
+				},
+				get: function(key) { //获取cookie方法
+					/*获取cookie参数*/
+					var getCookie = document.cookie.replace(/[ ]/g, ""); //获取cookie，并且将获得的cookie格式化，去掉空格字符
+					var arrCookie = getCookie.split(";") //将获得的cookie以"分号"为标识 将cookie保存到arrCookie的数组中
+					var tips; //声明变量tips
+					for(var i = 0; i < arrCookie.length; i++) { //使用for循环查找cookie中的tips变量
+						var arr = arrCookie[i].split("="); //将单条cookie用"等号"为标识，将单条cookie保存为arr数组
+						if(key == arr[0]) { //匹配变量名称，其中arr[0]是指的cookie名称，如果该条变量为tips则执行判断语句中的赋值操作
+							tips = arr[1]; //将cookie的值赋给变量tips
+							break; //终止for循环遍历
+						}
+					}
+					return tips;
+				},
+				delete: function(key) { //删除cookie方法
+					var date = new Date(); //获取当前时间
+					date.setTime(date.getTime() - 10000); //将date设置为过去的时间
+					document.cookie = key + "=v; expires =" + date.toGMTString(); //设置cookie
+				}
+			}
+			$(document).ready(function() {
+				$(document.body).css({
+					"overflow-x": "hidden",
+					"overflow-y": "hidden"
+				});
+				userId = cookie.get("userId");
+				if(userId!= null)refreshInfo();
+
+			})
+		</script>
+	</body>
+
+</html>

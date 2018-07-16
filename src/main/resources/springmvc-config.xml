@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--指定要扫描的包-->
+    <context:component-scan base-package="com.konsonx.*"/>
+    <mvc:annotation-driven >
+        <!-- 消息转换器 -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- 静态资源访问 -->
+    <!--如果webapp下你新建了文件夹，想访问里面的静态资源，那么就要在这配置一下-->
+    <mvc:resources location="/img/" mapping="/img/**"/>
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <mvc:resources location="/fonts/" mapping="/fonts/**"/>
+    <!-- Configures the @Controller programming model
+    <mvc:annotation-driven />-->
+    <!-- ②：启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+
+
+    <!-- 配置视图解析器，把控制器的逻辑视频映射为真正的视图 -->
+    <!-- /WEB-INF/jsp/start.jsp -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".html" />
+    </bean>
+    <!-- 定义无Controller的path<->view直接映射 -->
+    <mvc:view-controller path="/" view-name="redirect:/" />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/manage/manage.action"/>
+            <mvc:mapping path="/api/manage/**" />
+            <mvc:exclude-mapping path="/api/manage/administrators/account/*/actions/login" />
+            <mvc:exclude-mapping path="/api/manage/administrators/account/*/actions/logout" />
+            <mvc:exclude-mapping path="/api/manage/administrators/account/*/password" />
+            <bean class="com.konsonx.interceptor.ManageLoginCheckInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/client/**" />
+            <mvc:exclude-mapping path="/api/client/users/phone/*/actions/login" />
+            <mvc:exclude-mapping path="/api/client/users/*/password" />
+            <mvc:exclude-mapping path="/api/client/users"/>
+            <bean class="com.konsonx.interceptor.ClientLoginCheckInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+</beans>
