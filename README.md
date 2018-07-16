@@ -31,3 +31,7 @@
 * 课程需要完成模拟系统的，可参考。十八流编码水平。
 * 需要使用高德地图的定位、云图的定位搜索、云图数据查询的，可以参考。官方云图数据的示例有所欠缺。
 * 其他人就不用看了。。。
+
+## 效果图
+![前台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/01.JPG)
+![后台](https://github.com/KonsonChow/ChargerSharingSystem/blob/master/02.JPG)
